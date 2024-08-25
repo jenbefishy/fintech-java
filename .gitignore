@@ -1,0 +1,25 @@
+# Java
+*.class
+
+# Log files
+*.log
+
+# Maven
+.mvn/
+target/
+
+# Gradle
+.gradle/
+build/
+
+# Vim files
+*.swp
+*.swo
+*.swn
+*~
+
+# IDE
+.vscode/
+.idea/
+
+
