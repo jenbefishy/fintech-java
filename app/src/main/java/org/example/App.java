@@ -1,14 +1,11 @@
 package org.example;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.stream.Stream;
+
 
 public class App {
     private static final Logger logger = LoggerFactory.getLogger(App.class);
@@ -16,43 +13,35 @@ public class App {
     private static final String outputFilePath = "src/main/resources/city.xml";
 
     public static void main(String[] args) {
-        ObjectMapper objectMapper = new ObjectMapper();
+        Parser.parse(inputFilePath, outputFilePath);
+        CustomLinkedList<Integer> list = new CustomLinkedList<>();
 
-        try {
-            File inputFile = new File(inputFilePath);
-            if (!inputFile.exists() || !inputFile.canRead()) {
-                logger.error("Input file does not exist or cannot be read: {}", inputFilePath);
-                return;
-            }
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+        System.out.println("List after adding elements: " + list.toList());
 
-            City city = objectMapper.readValue(inputFile, City.class);
-            logger.info("Successfully loaded city data: {}", city);
+        System.out.println("Element at index 0: " + list.get(0));
+        System.out.println("Element at index 3: " + list.get(3));
 
-            String xmlOutput = toXML(city);
+        System.out.println("Removed element at index 0: " + list.remove(0));
+        System.out.println("List after removing element: " + list.toList());
 
-            File outputFile = new File(outputFilePath);
-            Files.writeString(outputFile.toPath(), xmlOutput);
-            logger.info("Successfully saved XML to {}", outputFile.getAbsolutePath());
+        System.out.println("List contains 2: " + list.contains(2));
+        System.out.println("List contains 6: " + list.contains(6));
 
-        } catch (JsonParseException e) {
-            logger.error("Error parsing file", e);
-        } catch (IOException e) {
-            logger.error("I/O error", e);
+        List<Integer> anotherList = List.of(6, 7, 8);
+        list.addAll(anotherList);
+        System.out.println("List after adding all elements with list: " + list.toList());
 
-        } catch (Exception e) {
-            logger.error("Unexpected error", e);
-        }
+        Stream<Integer> stream = Stream.of(9, 10, 11);
+        CustomLinkedList<Integer> newList = CustomLinkedList.fromStream(stream);
+        System.out.println("New list from stream: " + newList.toList());
+        System.out.println("The size of list : " + newList.getSize());
+
+
     }
 
-    static String toXML(City city) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<City>\n");
-        sb.append("  <slug>").append(city.getSlug()).append("</slug>\n");
-        sb.append("  <coords>\n");
-        sb.append("    <lat>").append(city.getCoords().getLat()).append("</lat>\n");
-        sb.append("    <lon>").append(city.getCoords().getLon()).append("</lon>\n");
-        sb.append("  </coords>\n");
-        sb.append("</City>");
-        return sb.toString();
-    }
 }

@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AppTest {
+class ParserTest {
 
     private ObjectMapper objectMapper;
     private static final String VALID_JSON_PATH = "src/test/resources/city.json";
@@ -30,7 +30,7 @@ class AppTest {
         assertEquals(59.939095, city.getCoords().getLat());
         assertEquals(30.315868, city.getCoords().getLon());
 
-        String xmlOutput = App.toXML(city);
+        String xmlOutput = Parser.toXML(city);
         assertNotNull(xmlOutput);
         assertTrue(xmlOutput.contains("<slug>spb</slug>"));
         assertTrue(xmlOutput.contains("<lat>59.939095</lat>"));
